@@ -58,49 +58,32 @@
       </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="title"
-        label="标题"
+        prop="name"
+        label="名称"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        label="作者"
-        prop="author"
-      ></el-table-column>
-      <el-table-column show-overflow-tooltip label="头像">
-        <template #default="{ row }">
-          <el-image
-            v-if="imgShow"
-            :preview-src-list="imageList"
-            :src="row.img"
-          ></el-image>
-        </template>
-      </el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        label="点击量"
-        prop="pageViews"
+        label="工资"
+        prop="salary"
         sortable
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="状态">
-        <template #default="{ row }">
-          <el-tooltip
-            :content="row.status"
-            class="item"
-            effect="dark"
-            placement="top-start"
-          >
-            <el-tag :type="row.status | statusFilter">
-              {{ row.status }}
-            </el-tag>
-          </el-tooltip>
-        </template>
-      </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        label="时间"
-        prop="datetime"
-        width="200"
+        label="年龄"
+        prop="age"
+        sortable
       ></el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="email"
+        label="Email"
+      ></el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="deptname"
+        label="所属部门"
+      ></el-table-column>
+
       <el-table-column show-overflow-tooltip label="操作" width="180px">
         <template #default="{ row }">
           <el-button type="text" @click="handleEdit(row)">编辑</el-button>

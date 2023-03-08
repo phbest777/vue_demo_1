@@ -7,7 +7,12 @@ export function getList(data) {
     data,
   })
 }
-
+export function getEmpAll(data) {
+  return request({
+    url: '/emp/getList',
+    method: 'get',
+  })
+}
 export function doEdit(data) {
   return request({
     url: '/table/doEdit',
