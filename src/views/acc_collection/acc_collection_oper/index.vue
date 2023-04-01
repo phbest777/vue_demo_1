@@ -105,7 +105,7 @@
 </template>
 
 <script>
-  import { getList, doDelete } from '@/api/table'
+  import { getEmpAll, doDelete } from '@/api/table'
   import TableEdit from './components/TableEdit'
   export default {
     name: 'ComprehensiveTable',
@@ -203,7 +203,10 @@
       },
       async fetchData() {
         this.listLoading = true
-        const { data, totalCount } = await getList(this.queryForm)
+
+        //const { data, totalCount } = await getList(this.queryForm)
+        const { data, totalCount } = await getEmpAll(this.queryForm)
+        console.log(data)
         this.list = data
         const imageList = []
         data.forEach((item, index) => {

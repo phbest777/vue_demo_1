@@ -1,18 +1,25 @@
 import request from '@/utils/request'
-
-export function getList(data) {
+/*export function getList(data) {
   return request({
     url: '/table/getList',
     method: 'post',
     data,
   })
-}
-export function getEmpAll(data) {
+}*/
+export function getList() {
   return request({
-    url: '/emp/getList',
+    url: '/emps/getlist',
     method: 'get',
   })
 }
+
+export function getEmpAll() {
+  return request({
+    url: '/emps/getlist',
+    method: 'get',
+  })
+}
+
 export function doEdit(data) {
   return request({
     url: '/table/doEdit',
