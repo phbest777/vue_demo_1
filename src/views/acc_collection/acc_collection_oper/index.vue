@@ -105,8 +105,9 @@
 </template>
 
 <script>
-  import { getEmpAll, doDelete } from '@/api/table'
+  import { getEmpAllPage, doDelete } from '@/api/table'
   import TableEdit from './components/TableEdit'
+  //import {getEmpAllPage} from "../../../api/table";
   export default {
     name: 'ComprehensiveTable',
     components: {
@@ -135,7 +136,7 @@
         elementLoadingText: '正在加载...',
         queryForm: {
           pageNo: 1,
-          pageSize: 20,
+          pageSize: 10,
           title: '',
           author: '',
         },
@@ -205,7 +206,11 @@
         this.listLoading = true
 
         //const { data, totalCount } = await getList(this.queryForm)
-        const { data, totalCount } = await getEmpAll(this.queryForm)
+        //const { data, totalCount } = await getEmpAll(this.queryForm)
+        const { data, totalCount } = await getEmpAllPage(
+          this.queryForm.pageNo,
+          this.queryForm.pageSize
+        )
         console.log(data)
         this.list = data
         const imageList = []

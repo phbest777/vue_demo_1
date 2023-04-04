@@ -20,6 +20,19 @@ export function getEmpAll() {
   })
 }
 
+export function getEmpAllPage(pageNo, pageSize) {
+  return request({
+    url:
+      '/emps/getlist_page/' +
+      pageNo +
+      '?pageNum=' +
+      pageNo +
+      '&pageSize=' +
+      pageSize,
+    method: 'get',
+  })
+}
+
 export function doEdit(data) {
   return request({
     url: '/table/doEdit',
