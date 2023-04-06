@@ -105,7 +105,13 @@
 </template>
 
 <script>
-  import { getEmpAllPage, doDelete, getEmpByName } from '@/api/table'
+  import {
+    getEmpAllPage,
+    doDelete,
+    getEmpByName,
+    DeleteEmp,
+    DeleteEmp_Batch,
+  } from '@/api/table'
   import TableEdit from './components/TableEdit'
   //import {getEmpAllPage} from "../../../api/table";
   export default {
@@ -172,7 +178,8 @@
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-            const { msg } = await doDelete({ ids: row.id })
+            console.log('row data is' + row.id)
+            const { msg } = await DeleteEmp({ id: row.id })
             this.$baseMessage(msg, 'success')
             this.fetchData()
           })
@@ -180,7 +187,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join()
             this.$baseConfirm('你确定要删除选中项吗', null, async () => {
-              const { msg } = await doDelete({ ids: ids })
+              const { msg } = await DeleteEmp_Batch({ ids: ids })
               this.$baseMessage(msg, 'success')
               this.fetchData()
             })

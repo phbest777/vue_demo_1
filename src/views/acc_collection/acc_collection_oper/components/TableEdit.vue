@@ -32,7 +32,7 @@
 </template>
 
 <script>
-  import { doEdit } from '@/api/table'
+  import { doEdit, SaveEmp } from '@/api/table'
 
   export default {
     name: 'TableEdit',
@@ -76,7 +76,7 @@
       save() {
         this.$refs['form'].validate(async (valid) => {
           if (valid) {
-            const { msg } = await doEdit(this.form)
+            const { msg } = await SaveEmp(this.form)
             this.$baseMessage(msg, 'success')
             this.$refs['form'].resetFields()
             this.dialogFormVisible = false

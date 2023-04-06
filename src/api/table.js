@@ -48,6 +48,30 @@ export function getEmpByName(pageNo, pageSize, name) {
   })
 }
 
+export function SaveEmp(data) {
+  return request({
+    url: '/emps/saveEmp',
+    method: 'post',
+    data,
+  })
+}
+
+export function DeleteEmp(data) {
+  return request({
+    url: '/emps/DeleteEmp',
+    method: 'post',
+    data,
+  })
+}
+
+export function DeleteEmp_Batch(data) {
+  return request({
+    url: '/emps/DeleteEmpBatch',
+    method: 'post',
+    data,
+  })
+}
+
 export function doEdit(data) {
   return request({
     url: '/table/doEdit',
