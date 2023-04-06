@@ -33,6 +33,21 @@ export function getEmpAllPage(pageNo, pageSize) {
   })
 }
 
+export function getEmpByName(pageNo, pageSize, name) {
+  return request({
+    url:
+      '/emps/getlist_name/' +
+      pageNo +
+      '?pageNum=' +
+      pageNo +
+      '&pageSize=' +
+      pageSize +
+      '&empName=' +
+      name,
+    method: 'get',
+  })
+}
+
 export function doEdit(data) {
   return request({
     url: '/table/doEdit',

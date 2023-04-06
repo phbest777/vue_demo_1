@@ -9,7 +9,7 @@
           @submit.native.prevent
         >
           <el-form-item>
-            <el-input v-model="queryForm.author" placeholder="作者" />
+            <el-input v-model="queryForm.name" placeholder="姓名" />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -80,7 +80,7 @@
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="deptname"
+        prop="deptid"
         label="所属部门"
       ></el-table-column>
 
@@ -105,7 +105,7 @@
 </template>
 
 <script>
-  import { getEmpAllPage, doDelete } from '@/api/table'
+  import { getEmpAllPage, doDelete, getEmpByName } from '@/api/table'
   import TableEdit from './components/TableEdit'
   //import {getEmpAllPage} from "../../../api/table";
   export default {
@@ -138,7 +138,7 @@
           pageNo: 1,
           pageSize: 10,
           title: '',
-          author: '',
+          name: '',
         },
       }
     },
@@ -204,24 +204,42 @@
       },
       async fetchData() {
         this.listLoading = true
-
         //const { data, totalCount } = await getList(this.queryForm)
         //const { data, totalCount } = await getEmpAll(this.queryForm)
-        const { data, totalCount } = await getEmpAllPage(
-          this.queryForm.pageNo,
-          this.queryForm.pageSize
-        )
-        console.log(data)
-        this.list = data
-        const imageList = []
-        data.forEach((item, index) => {
-          imageList.push(item.img)
-        })
-        this.imageList = imageList
-        this.total = totalCount
-        setTimeout(() => {
-          this.listLoading = false
-        }, 500)
+        if (this.queryForm.name != '') {
+          const { data, totalCount } = await getEmpByName(
+            this.queryForm.pageNo,
+            this.queryForm.pageSize,
+            this.queryForm.name
+          )
+          console.log(data)
+          this.list = data
+          const imageList = []
+          data.forEach((item, index) => {
+            imageList.push(item.img)
+          })
+          this.imageList = imageList
+          this.total = totalCount
+          setTimeout(() => {
+            this.listLoading = false
+          }, 500)
+        } else {
+          const { data, totalCount } = await getEmpAllPage(
+            this.queryForm.pageNo,
+            this.queryForm.pageSize
+          )
+          console.log(data)
+          this.list = data
+          const imageList = []
+          data.forEach((item, index) => {
+            imageList.push(item.img)
+          })
+          this.imageList = imageList
+          this.total = totalCount
+          setTimeout(() => {
+            this.listLoading = false
+          }, 500)
+        }
       },
       testMessage() {
         this.$baseMessage('test1', 'success')
