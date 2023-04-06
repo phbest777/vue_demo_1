@@ -28,11 +28,15 @@
       <el-button @click="close">取 消</el-button>
       <el-button type="primary" @click="save">确 定</el-button>
     </div>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="close">取 消</el-button>
+      <el-button type="primary" @click="update">更新</el-button>
+    </div>
   </el-dialog>
 </template>
 
 <script>
-  import { doEdit, SaveEmp } from '@/api/table'
+  import { doEdit, SaveEmp, UpdateEmp } from '@/api/table'
 
   export default {
     name: 'TableEdit',
@@ -77,6 +81,21 @@
         this.$refs['form'].validate(async (valid) => {
           if (valid) {
             const { msg } = await SaveEmp(this.form)
+            this.$baseMessage(msg, 'success')
+            this.$refs['form'].resetFields()
+            this.dialogFormVisible = false
+            this.$emit('fetch-data')
+            this.form = this.$options.data().form
+          } else {
+            return false
+          }
+        })
+      },
+
+      update() {
+        this.$refs['form'].validate(async (valid) => {
+          if (valid) {
+            const { msg } = await UpdateEmp(this.form)
             this.$baseMessage(msg, 'success')
             this.$refs['form'].resetFields()
             this.dialogFormVisible = false

@@ -64,6 +64,14 @@ export function DeleteEmp(data) {
   })
 }
 
+export function UpdateEmp(data) {
+  return request({
+    url: '/emps/updateEmp',
+    method: 'put',
+    data,
+  })
+}
+
 export function DeleteEmp_Batch(data) {
   return request({
     url: '/emps/DeleteEmpBatch',
