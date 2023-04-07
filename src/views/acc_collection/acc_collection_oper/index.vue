@@ -99,6 +99,7 @@
       :total="total"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
+      @refresh-data="refreshData"
     ></el-pagination>
     <table-edit ref="edit"></table-edit>
   </div>
@@ -175,6 +176,9 @@
       handleEdit(row) {
         this.$refs['edit'].showEdit(row)
       },
+      refreshData() {
+        this.fetchData()
+      },
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm('你确定要删除当前项吗', null, async () => {
@@ -210,6 +214,7 @@
         this.fetchData()
       },
       async fetchData() {
+        console.log('调用fetchData')
         this.listLoading = true
         //const { data, totalCount } = await getList(this.queryForm)
         //const { data, totalCount } = await getEmpAll(this.queryForm)
