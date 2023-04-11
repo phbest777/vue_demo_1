@@ -6,11 +6,22 @@
     @close="close"
   >
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="标题" prop="title">
-        <el-input v-model.trim="form.title" autocomplete="off"></el-input>
+      <el-form-item label="姓名" prop="name">
+        <el-input v-model.trim="form.name" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="作者" prop="author">
-        <el-input v-model.trim="form.author" autocomplete="off"></el-input>
+      <el-form-item label="工资" prop="salary">
+        <el-input v-model.trim="form.salary" autocomplete="off"></el-input>
+      </el-form-item>
+    </el-form>
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form-item label="年龄" prop="age">
+        <el-input v-model.trim="form.age" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="Email" prop="email">
+        <el-input v-model.trim="form.email" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="部门号" prop="deptid">
+        <el-input v-model.trim="form.deptid" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -21,19 +32,25 @@
 </template>
 
 <script>
-  import { doEdit } from '@/api/table'
+  import { doEdit, SaveEmp, UpdateEmp } from '@/api/table'
 
   export default {
     name: 'TableEdit',
     data() {
       return {
         form: {
-          title: '',
-          author: '',
+          name: '',
+          salary: '',
+          age: '',
+          email: '',
+          deptid: '',
         },
         rules: {
-          title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
-          author: [{ required: true, trigger: 'blur', message: '请输入作者' }],
+          name: [{ required: true, trigger: 'blur', message: '请输入姓名' }],
+          salary: [{ required: true, trigger: 'blur', message: '请输入工资' }],
+          age: [{ required: true, trigger: 'blur', message: '请输入年龄' }],
+          email: [{ required: true, trigger: 'blur', message: '请输入邮箱' }],
+          deptid: [{ required: true, trigger: 'blur', message: '请输入部门' }],
         },
         title: '',
         dialogFormVisible: false,
@@ -59,7 +76,31 @@
       save() {
         this.$refs['form'].validate(async (valid) => {
           if (valid) {
-            const { msg } = await doEdit(this.form)
+            if (this.title == '添加') {
+              const { msg } = await SaveEmp(this.form)
+              this.$baseMessage(msg, 'success')
+              this.$refs['form'].resetFields()
+              this.dialogFormVisible = false
+              this.$emit('refresh-data')
+              this.form = this.$options.data().form
+            } else {
+              const { msg } = await UpdateEmp(this.form)
+              this.$baseMessage(msg, 'success')
+              this.$refs['form'].resetFields()
+              this.dialogFormVisible = false
+              this.$emit('refresh-data')
+              this.form = this.$options.data().form
+            }
+          } else {
+            return false
+          }
+        })
+      },
+
+      update() {
+        this.$refs['form'].validate(async (valid) => {
+          if (valid) {
+            const { msg } = await UpdateEmp(this.form)
             this.$baseMessage(msg, 'success')
             this.$refs['form'].resetFields()
             this.dialogFormVisible = false

@@ -2,18 +2,6 @@
   <div class="table-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
-          添加
-        </el-button>
-        <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
-          删除
-        </el-button>
-        <el-button type="primary" @click="testMessage">baseMessage</el-button>
-        <el-button type="primary" @click="testALert">baseAlert</el-button>
-        <el-button type="primary" @click="testConfirm">baseConfirm</el-button>
-        <el-button type="primary" @click="testNotify">baseNotify</el-button>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
         <el-form
           ref="form"
           :model="queryForm"
@@ -21,7 +9,7 @@
           @submit.native.prevent
         >
           <el-form-item>
-            <el-input v-model="queryForm.title" placeholder="标题" />
+            <el-input v-model="queryForm.name" placeholder="姓名" />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -34,17 +22,32 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-right-panel>
+      </vab-query-form-left-panel>
+      <vab-query-form-bottom-panel>
+        <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
+          添加
+        </el-button>
+        <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
+          删除
+        </el-button>
+        <el-button type="primary" @click="testMessage">baseMessage</el-button>
+        <el-button type="primary" @click="testALert">baseAlert</el-button>
+        <el-button type="primary" @click="testConfirm">baseConfirm</el-button>
+        <el-button type="primary" @click="testNotify">baseNotify</el-button>
+      </vab-query-form-bottom-panel>
     </vab-query-form>
 
     <el-table
       ref="tableSort"
       v-loading="listLoading"
+      border
+      highlight-current-row
       :data="list"
       :element-loading-text="elementLoadingText"
       :height="height"
       @selection-change="setSelectRows"
       @sort-change="tableSortChange"
+      @refresh-data="fetchData"
     >
       <el-table-column
         show-overflow-tooltip
@@ -58,49 +61,32 @@
       </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="title"
-        label="标题"
+        prop="name"
+        label="名称"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        label="作者"
-        prop="author"
-      ></el-table-column>
-      <el-table-column show-overflow-tooltip label="头像">
-        <template #default="{ row }">
-          <el-image
-            v-if="imgShow"
-            :preview-src-list="imageList"
-            :src="row.img"
-          ></el-image>
-        </template>
-      </el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        label="点击量"
-        prop="pageViews"
+        label="工资"
+        prop="salary"
         sortable
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="状态">
-        <template #default="{ row }">
-          <el-tooltip
-            :content="row.status"
-            class="item"
-            effect="dark"
-            placement="top-start"
-          >
-            <el-tag :type="row.status | statusFilter">
-              {{ row.status }}
-            </el-tag>
-          </el-tooltip>
-        </template>
-      </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        label="时间"
-        prop="datetime"
-        width="200"
+        label="年龄"
+        prop="age"
+        sortable
       ></el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="email"
+        label="Email"
+      ></el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="deptid"
+        label="所属部门"
+      ></el-table-column>
+
       <el-table-column show-overflow-tooltip label="操作" width="180px">
         <template #default="{ row }">
           <el-button type="text" @click="handleEdit(row)">编辑</el-button>
@@ -117,13 +103,20 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     ></el-pagination>
-    <table-edit ref="edit"></table-edit>
+    <table-edit ref="edit" @refresh-data="fetchData"></table-edit>
   </div>
 </template>
 
 <script>
-  import { getList, doDelete } from '@/api/table'
+  import {
+    getEmpAllPage,
+    doDelete,
+    getEmpByName,
+    DeleteEmp,
+    DeleteEmp_Batch,
+  } from '@/api/table'
   import TableEdit from './components/TableEdit'
+  //import {getEmpAllPage} from "../../../api/table";
   export default {
     name: 'ComprehensiveTable',
     components: {
@@ -152,8 +145,9 @@
         elementLoadingText: '正在加载...',
         queryForm: {
           pageNo: 1,
-          pageSize: 20,
+          pageSize: 10,
           title: '',
+          name: '',
         },
       }
     },
@@ -184,10 +178,14 @@
       handleEdit(row) {
         this.$refs['edit'].showEdit(row)
       },
+      refreshData() {
+        this.fetchData()
+      },
       handleDelete(row) {
         if (row.id) {
           this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-            const { msg } = await doDelete({ ids: row.id })
+            console.log('row data is' + row.id)
+            const { msg } = await DeleteEmp({ id: row.id })
             this.$baseMessage(msg, 'success')
             this.fetchData()
           })
@@ -195,7 +193,7 @@
           if (this.selectRows.length > 0) {
             const ids = this.selectRows.map((item) => item.id).join()
             this.$baseConfirm('你确定要删除选中项吗', null, async () => {
-              const { msg } = await doDelete({ ids: ids })
+              const { msg } = await DeleteEmp_Batch({ ids: ids })
               this.$baseMessage(msg, 'success')
               this.fetchData()
             })
@@ -218,18 +216,44 @@
         this.fetchData()
       },
       async fetchData() {
+        console.log('调用fetchData')
         this.listLoading = true
-        const { data, totalCount } = await getList(this.queryForm)
-        this.list = data
-        const imageList = []
-        data.forEach((item, index) => {
-          imageList.push(item.img)
-        })
-        this.imageList = imageList
-        this.total = totalCount
-        setTimeout(() => {
-          this.listLoading = false
-        }, 500)
+        //const { data, totalCount } = await getList(this.queryForm)
+        //const { data, totalCount } = await getEmpAll(this.queryForm)
+        if (this.queryForm.name != '') {
+          const { data, totalCount } = await getEmpByName(
+            this.queryForm.pageNo,
+            this.queryForm.pageSize,
+            this.queryForm.name
+          )
+          console.log(data)
+          this.list = data
+          const imageList = []
+          data.forEach((item, index) => {
+            imageList.push(item.img)
+          })
+          this.imageList = imageList
+          this.total = totalCount
+          setTimeout(() => {
+            this.listLoading = false
+          }, 500)
+        } else {
+          const { data, totalCount } = await getEmpAllPage(
+            this.queryForm.pageNo,
+            this.queryForm.pageSize
+          )
+          console.log(data)
+          this.list = data
+          const imageList = []
+          data.forEach((item, index) => {
+            imageList.push(item.img)
+          })
+          this.imageList = imageList
+          this.total = totalCount
+          setTimeout(() => {
+            this.listLoading = false
+          }, 500)
+        }
       },
       testMessage() {
         this.$baseMessage('test1', 'success')

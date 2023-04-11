@@ -40,11 +40,14 @@
     <el-table
       ref="tableSort"
       v-loading="listLoading"
+      border
+      highlight-current-row
       :data="list"
       :element-loading-text="elementLoadingText"
       :height="height"
       @selection-change="setSelectRows"
       @sort-change="tableSortChange"
+      @refresh-data="fetchData"
     >
       <el-table-column
         show-overflow-tooltip
@@ -99,9 +102,8 @@
       :total="total"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
-      @refresh-data="refreshData"
     ></el-pagination>
-    <table-edit ref="edit"></table-edit>
+    <table-edit ref="edit" @refresh-data="fetchData"></table-edit>
   </div>
 </template>
 
